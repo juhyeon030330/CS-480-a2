@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public AudioClip wallHitSound;
     public ParticleSystem movementParticles;
     public float turnSpeed = 20f;
 
@@ -65,4 +66,20 @@ public class PlayerMovement : MonoBehaviour
         m_Rigidbody.MovePosition (m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
         m_Rigidbody.MoveRotation (m_Rotation);
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // We use PlayOneShot so it doesn't interrupt the walking footsteps 
+        // and can overlap if the player hits multiple things.
+        
+        // Check if the collided object name contains your folder keywords
+        if (collision.gameObject.name.Contains("Wall"))
+        {
+            if (wallHitSound != null)
+            {
+                m_AudioSource.PlayOneShot(wallHitSound);
+            }
+        }
+    }
+
 }
